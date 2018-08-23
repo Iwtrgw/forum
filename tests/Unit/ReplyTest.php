@@ -6,15 +6,19 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class ReplyTest extends TestCase
 {
+	use DatabaseMigrations;
+
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testBasicTest()
+    public function test_a_reply_has_an_owner()
     {
-        $this->assertTrue(true);
+        $reply = factory('App\Reply')->create();
+
+        $this->assertInstanceOf('App\User',$reply->owner);
     }
 }
