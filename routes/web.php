@@ -26,3 +26,6 @@ Route::get('threads/{channel}','ThreadController@index');
 Route::post('/threads/{channel}/{thread}/replies','ReplyController@store');
 
 Route::post('/replies/{reply}/favorites','FavoritesController@store');
+
+// 个人中心路由
+Route::get('/profiles/{user}','ProfilesController@show')->name('profile');
