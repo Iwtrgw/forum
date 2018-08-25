@@ -19,7 +19,10 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setlocale('zh');
         // 配置视图合成
         \View::composer('*',function ($view){
-           $view->with('channels',Channel::all()); 
+           $channels = \Cache::rememberForever('channels',function (){
+                return Channel::all();
+           }) ;
+           $view->with('channels',$channels);
         });
     }
 
@@ -30,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // 本地环境开启dubug
+        if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
     }
 }
