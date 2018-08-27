@@ -73,6 +73,32 @@ class CreateThreadsTest extends TestCase
              ->assertSessionHasErrors('channel_id');
     }
 
+    /* @test 删除操作权限认证 */
+    public function test_unauthorized_users_may_not_delete_threads()
+    {
+        $this->withExceptionHandling();
+
+        $thread = create('App\Thread');
+
+        $this->delete($thread->path())->assertRedirect('/login');
+
+        $this->signIn();
+        $this->delete($thread->path())->assertStatus(403);
+    }
+
+    /* @test 话题删除功能 */
+    public function test_authorized_users_can_delete_threads()
+    {
+        $this->signIn();
+        $thread = create('App\Thread', ['user_id' => auth()->id()]);
+        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+        $response = $this->json('DELETE', $thread->path());
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, Activity::count());
+    }
+
     public function publishThread($overrides = [])
     {
         $this->withExceptionHandling()->signIn();
@@ -81,6 +107,8 @@ class CreateThreadsTest extends TestCase
 
         return $this->post('/threads',$thread->toArray());
     }
+
+
 
    
 }

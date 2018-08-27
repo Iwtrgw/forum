@@ -6,13 +6,26 @@
             <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                    	<a href="{{ route('profile',$thread->creator ) }}">{{ $thread->creator->name }}</a>
-                        {{ $thread->title }}
+                    	<div class="level">
+                            <span class="flex">
+                                <a href="{{ route('profile',$thread->creator) }}">{{ $thread->creator->name }}</a>
+                                {{ $thread->title }}
+                            </span>
+
+                            @can('update', $thread)
+                                <form action="{{ $thread->path() }}" method="POST">
+                                    {{ csrf_field()}}
+                                    {{ method_field('DELETE') }}
+                                    <button class="btn btn-link" type="submit">Delete Thread</button>
+                                </form>
+                            @endcan
+                        </div>
                     </div>
 
                     <div class="panel-body">
                         {{ $thread->body }}
                     </div>
+
                 </div>
                 @foreach ($replies as $reply)
                     @include('threads.reply')

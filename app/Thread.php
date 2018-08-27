@@ -17,6 +17,10 @@ class Thread extends Model
         static::addGlobalScope('replyCount',function ($builder){
            $builder->withCount('replies');
         });
+
+        static::deleting(function($thread) {
+          $thread->replies()->delete();
+        });
     }
 
    public function path()
@@ -26,9 +30,9 @@ class Thread extends Model
 
    public function replies()
    {
-   		return $this->hasMany(Reply::class)
-                  ->withCount('favorites')
-                  ->with('owner');
+   		return $this->hasMany(Reply::class);
+                  // ->withCount('favorites')
+                  // ->with('owner');
    }
 
    public function creator()
