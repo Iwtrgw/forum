@@ -19,4 +19,10 @@ class FavoritesController extends Controller
 
     	return back();
     }
+
+    // 取消点赞
+    public function destroy(Reply $reply)
+    {
+    	$reply->unfavorite();
+    }
 }

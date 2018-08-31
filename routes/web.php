@@ -30,6 +30,7 @@ Route::patch('/replies/{reply}','ReplyController@update');
 Route::delete('/replies/{reply}','ReplyController@destroy');
 
 Route::post('/replies/{reply}/favorites','FavoritesController@store');
+Route::delete('/replies/{reply}/favorites','FavoritesController@destroy'); // 取消点赞
 
 // 个人中心路由
 Route::get('/profiles/{user}','ProfilesController@show')->name('profile');
