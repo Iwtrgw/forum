@@ -55,6 +55,13 @@ window.Vue = require('vue');
 
 window.events = new Vue();
 
+Vue.prototype.authorize = function (hander) {
+
+	let user = window.App.user;
+
+	return user ? hander(user) : false;
+};
+
 window.flash = function (message) {
 	window.events.$emit('flash',message);
 };

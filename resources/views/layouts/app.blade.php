@@ -13,8 +13,10 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script type="text/javascript">
-        window.laravel = {!! json_encode([
+        window.App = {!! json_encode([
                 'csrfToken' => csrf_token(),
+                'user' => Auth::user(),
+                'signIn' => Auth::check()
             ]) !!};
     </script>
 
