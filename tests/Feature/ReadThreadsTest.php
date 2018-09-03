@@ -36,22 +36,6 @@ class ReadThreadsTest extends TestCase
        
     }
 
-    /* test */
-    public function test_a_user_can_read_replies_that_are_associated_with_a_thread()
-    {
-        /*
-         * 如果存在 Thread
-         * 并且该 Thread 拥有回复
-         */
-        $reply = factory('App\Reply')->create(['thread_id' => $this->thread->id]);
-        
-        /* 那么当我们看到该 Thread 时
-         * 我们也要看到回复
-         */
-        
-        $this->get($this->thread->path())->assertSee($reply->body);
-    }
-
     /* @test */
     public function a_user_can_filter_threads_assording_to_a_channel()
     {
@@ -95,5 +79,17 @@ class ReadThreadsTest extends TestCase
 
         // Then they should be returned from most replies to least.
         $this->assertEquals([3,2,0],array_column($response,'replies_count'));
+    }
+
+    /* @test 用 index() 获取当前话题的数据 */
+    public function test_a_user_can_request_all_replies_for_a_given_thread()
+    {
+        $thread = create('App\Thread');
+        create('App\Reply',['thread_id' => $thread->id],40);
+
+        $response = $this->getJson($thread->path() . '/replies')->json();
+
+        $this->assertCount(20,$response['data']);
+        $this->assertEquals(40,$response['total']);
     }
 }
