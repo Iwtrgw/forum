@@ -81,6 +81,17 @@ class ReadThreadsTest extends TestCase
         $this->assertEquals([3,2,0],array_column($response,'replies_count'));
     }
 
+    /* @test 筛选零回复的话题 */
+    public function test_a_user_can_filter_threads_by_those_that_are_unanswered()
+    {
+        $thread = create('App\Thread');
+        create('App\Reply',['thread_id' => $thread->id]);
+
+        $response = $this->getJson('threads?unanswered=1')->json();
+
+        $this->assertCount(1,$response);
+    }
+
     /* @test 用 index() 获取当前话题的数据 */
     public function test_a_user_can_request_all_replies_for_a_given_thread()
     {

@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 
 class ThreadsFilters extends Filters
 {
-	protected $filters = ['by','popularity'];
+	protected $filters = ['by','popularity','unanswered'];
+
+	public function unanswered()
+	{
+		return $this->builder->where('replies_count',0);
+	}
 
 	protected function by($username)
 	{
