@@ -24,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
            }) ;
            $view->with('channels',$channels);
         });
+
+        // 垃圾消息过滤
+        \Validator::extend('spamfree','App\Rules\SpamFree@passes');
     }
 
     /**

@@ -109,4 +109,18 @@ class ParticipateInForumTest extends TestCase
 
         $this->assertDatabaseHas('replies',['id' => $reply->id,'body' => $updatedReply]);
     }
+
+    /* @test 关键字检测 */
+    public function test_replies_contain_spam_may_not_be_created()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+        $reply = make('App\Reply',[
+           'body' => 'something forbidden'
+        ]);
+
+        $this->post($thread->path() . '/replies',$reply->toArray())
+             ->assertStatus(422);
+    }
 }
