@@ -96,4 +96,12 @@ class Thread extends Model
           ->where('user_id',auth()->id())
           ->exists();
   }
+
+  // 判断订阅的话题是否更新
+  public function  hasUpdatesFor($user)
+  {
+    $key = $user->visitedThreadCacheKey($this);
+
+    return $this->updated_at > cache($key);
+  }
 }
