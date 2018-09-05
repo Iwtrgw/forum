@@ -33,6 +33,13 @@ Route::delete('/replies/{reply}','ReplyController@destroy');
 Route::post('/replies/{reply}/favorites','FavoritesController@store');
 Route::delete('/replies/{reply}/favorites','FavoritesController@destroy'); // 取消点赞
 
+// 话题订阅
+Route::post('/threads/{channel}/{thread}/subscriptions','ThreadSubscriptionsController@store')->middleware('auth');
+Route::delete('/threads/{channel}/{thread}/subscriptions','ThreadSubscriptionsController@destroy')->middleware('auth');
+
 // 个人中心路由
 Route::get('/profiles/{user}','ProfilesController@show')->name('profile');
+
+Route::get('/profiles/{user}/notifications','UserNotificationsController@index'); // 订阅通知消息
+Route::delete('/profiles/{user}/notifications/{notification}','UserNotificationsController@destroy'); // 清除已读通知消息
 

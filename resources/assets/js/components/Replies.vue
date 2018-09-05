@@ -6,7 +6,7 @@
 
 		<paginator :dataSet="dataSet" @changed="fetch"></paginator>
 
-		<new-reply @created="add"></new-reply>
+		<new-reply :endpoint="endpoint" @created="add"></new-reply>
 	</div>
 </template>
 
@@ -21,7 +21,10 @@
 		mixins: [collection],
 
 		data() {
-			return { dataSet:false }
+			return { 
+				dataSet:false,
+				endpoint: location.pathname+'/replies'
+			}
 		},
 
 		created() {
