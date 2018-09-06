@@ -27,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // 手动添加管理员
         Gate::before(function($user){
             if ($user->name === 'Aufree') {
                 return true;

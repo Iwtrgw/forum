@@ -123,4 +123,19 @@ class ParticipateInForumTest extends TestCase
         $this->post($thread->path() . '/replies',$reply->toArray())
              ->assertStatus(422);
     }
+
+    /* @test 限制用户回复频率 */
+    public function test_users_may_only_reply_a_maximum_of_once_per_minute()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+        $reply = make('App\Reply',[
+            'body' => 'My simple reply.'
+        ]);
+
+        $this->post($thread->path() . '/replies',$reply->toArray())->assertStatus(200);
+
+        $this->post($thread->path() . '/replies',$reply->toArray())->assertStatus(422);
+    }
 }
