@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Reply;
 use App\Thread;
 use Gate;
-
+use App\Http\Requests\CreatePostForm;
 
 class ReplyController extends Controller
 {
@@ -42,28 +42,12 @@ class ReplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     // 话题回复
-    public function store($channelId,Thread $thread)
+     public function store($channelId,Thread $thread,CreatePostForm $form)
     {
-        if (Gate::denies('create',new Reply)) {
-            return response(
-                'You are posting too frequently.Please take a break.:)',422
-            );
-        }
-
-        try{
-            $this->validate(request(),['body' => 'required|spamfree']);
-
-            $reply = $thread->addReply([
+        return $reply = $thread->addReply([
                 'body' => request('body'),
                 'user_id' => auth()->id(),
-            ]);
-        }catch (\Exception $e){
-            return response(
-                'Sorry,your reply could not be saved at this time.',422
-            );
-        }
-
-        return $reply->load('owner');
+            ])->load('owner');
     }
 
     /**

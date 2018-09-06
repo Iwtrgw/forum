@@ -113,6 +113,8 @@ class ParticipateInForumTest extends TestCase
     /* @test 关键字检测 */
     public function test_replies_contain_spam_may_not_be_created()
     {
+        $this->withExceptionHandling();
+
         $this->signIn();
 
         $thread = create('App\Thread');
@@ -120,13 +122,14 @@ class ParticipateInForumTest extends TestCase
            'body' => 'something forbidden'
         ]);
 
-        $this->post($thread->path() . '/replies',$reply->toArray())
-             ->assertStatus(422);
+        $this->json('post',$thread->path() . '/replies',$reply->toArray())
+            ->assertStatus(422);
     }
 
     /* @test 限制用户回复频率 */
     public function test_users_may_only_reply_a_maximum_of_once_per_minute()
     {
+        $this->withExceptionHandling();
         $this->signIn();
 
         $thread = create('App\Thread');
@@ -134,8 +137,10 @@ class ParticipateInForumTest extends TestCase
             'body' => 'My simple reply.'
         ]);
 
-        $this->post($thread->path() . '/replies',$reply->toArray())->assertStatus(200);
+        $this->post($thread->path() . '/replies',$reply->toArray())
+            ->assertStatus(200);
 
-        $this->post($thread->path() . '/replies',$reply->toArray())->assertStatus(422);
+        $this->post($thread->path() . '/replies',$reply->toArray())
+            ->assertStatus(429);
     }
 }
