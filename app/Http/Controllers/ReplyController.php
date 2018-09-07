@@ -7,6 +7,7 @@ use App\Thread;
 use Gate;
 use App\Http\Requests\CreatePostForm;
 
+
 class ReplyController extends Controller
 {
 
@@ -44,10 +45,11 @@ class ReplyController extends Controller
     // 话题回复
      public function store($channelId,Thread $thread,CreatePostForm $form)
     {
-        return $reply = $thread->addReply([
-                'body' => request('body'),
-                'user_id' => auth()->id(),
-            ])->load('owner');
+         return $thread->addReply([
+                    'body' => request('body'),
+                    'user_id' => auth()->id(),
+                ])->load('owner');
+       
     }
 
     /**
