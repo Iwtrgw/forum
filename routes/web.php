@@ -43,3 +43,5 @@ Route::get('/profiles/{user}','ProfilesController@show')->name('profile');
 Route::get('/profiles/{user}/notifications','UserNotificationsController@index'); // 订阅通知消息
 Route::delete('/profiles/{user}/notifications/{notification}','UserNotificationsController@destroy'); // 清除已读通知消息
 
+// @ 时搜索用户名的集合
+Route::get('api/users','Api\UsersController@index');
