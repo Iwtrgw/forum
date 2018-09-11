@@ -45,3 +45,5 @@ Route::delete('/profiles/{user}/notifications/{notification}','UserNotifications
 
 // @ 时搜索用户名的集合
 Route::get('api/users','Api\UsersController@index');
+// 图像上传
+Route::post('api/users/{user}/avatar','Api\UserAvatarController@store')->middleware('auth')->name('avatar');
