@@ -9,7 +9,7 @@ use App\Events\ThreadRecivedNewReply;
 class Thread extends Model
 {
 
-    use RecordsActivity;
+    use RecordsActivity,RecordsVisits;
 
    protected $guarded = [];
    protected $with = ['creator','channel'];
@@ -105,4 +105,6 @@ class Thread extends Model
 
     return $this->updated_at > cache($key);
   }
+
+
 }
