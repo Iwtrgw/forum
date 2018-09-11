@@ -56,9 +56,10 @@ class User extends Authenticatable
         );
     }
 
-    public function avatar()
+    // 用户头像访问器
+    public function getAvatarPathAttribute($avatar)
     {
-        return $this->avatar_path ?: 'avatars/default.jpg';
+        return $avatar ?: 'avatars/default.jpg';
     }
 
     public function visitedThreadCacheKey($thread)
