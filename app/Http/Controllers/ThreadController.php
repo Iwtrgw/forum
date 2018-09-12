@@ -68,8 +68,8 @@ class ThreadController extends Controller
     {
         $this->validate($request,[
            'title' => 'required|spamfree',
-           'body' => 'required|spamfree',
-           'channel_id' => 'required|exists:channels,id'
+            'body' => 'required|spamfree',
+            'channel_id' => 'required|exists:channels,id'
         ]);
 
         $thread = Thread::create([
@@ -79,7 +79,8 @@ class ThreadController extends Controller
             'body' => request('body'),
         ]);
 
-        return redirect($thread->path())->with('flash','Your thread has been published!');
+        return redirect($thread->path())
+            ->with('flash','Your thread has been published!');
     }
 
     /**

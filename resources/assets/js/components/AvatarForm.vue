@@ -13,7 +13,7 @@
 </template>
 
 <script>
-	import ImageUpload form './ImageUpload.vue';
+	import ImageUpload from './ImageUpload.vue';
 
     export default {
         props: ['user'],
