@@ -9,7 +9,7 @@ use App\Events\ThreadRecivedNewReply;
 class Thread extends Model
 {
 
-    use RecordsActivity,RecordsVisits;
+    use RecordsActivity;
 
    protected $guarded = [];
    protected $with = ['creator','channel'];
