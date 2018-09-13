@@ -35,26 +35,27 @@ class RegistrationTest extends TestCase
     public function test_user_can_fully_confirm_their_email_addresses()
     {
     	// 应用 【邮件模拟】
-    	Mail::fake();
+    	 Mail::fake();
 
-    	$this->post(route('register'),[
-    		'name' => 'NoNo1',
-    		'email' => 'NoNo1@example.com',
-    		'password' => '123456',
-    		'password_confirmation' => '123456',
-    	]);
+        $this->post(route('register'),[
+            'name' => 'NoNo1',
+            'email' => 'NoNo1@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
 
-    	$user = User::whereName('NoNo1')->first();
+        $user = User::whereName('NoNo1')->first();
 
-        // 新注册用户未认证，且拥有 confirmation_token
         $this->assertFalse($user->confirmed);
         $this->assertNotNull($user->confirmation_token);
 
-        // 用路由命名代替 url
         $this->get(route('register.confirm',['token' => $user->confirmation_token]))
-        	 ->assertRedirect(route('threads'));
+            ->assertRedirect(route('threads'));
 
-        $this->assertTrue($user->fresh()->confirmed);
+        tap($user->fresh(),function($user) {
+            $this->assertTrue($user->confirmed);
+            $this->assertNull($user->confirmation_token);
+        });
     }
 
     /* @test 测试无效 Token */
