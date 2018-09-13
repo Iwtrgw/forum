@@ -20,15 +20,24 @@ class RegistrationTest extends TestCase
     {
     	Mail::fake();
 
-    	event(new Registered(create('App\User')));
+        // 用路由命名代替 url
+        $this->post(route('register'),[
+            'name' => 'NoNo1',
+            'email' => 'NoNo1@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
 
-    	Mail::assertSent(PleaseConfirmYourEmail::class);
+        Mail::assertSent(PleaseConfirmYourEmail::class);
     }
 
     /* @test 邮箱链接认证 */
     public function test_user_can_fully_confirm_their_email_addresses()
     {
-    	$this->post('/register',[
+    	// 应用 【邮件模拟】
+    	Mail::fake();
+
+    	$this->post(route('register'),[
     		'name' => 'NoNo1',
     		'email' => 'NoNo1@example.com',
     		'password' => '123456',
@@ -41,10 +50,21 @@ class RegistrationTest extends TestCase
         $this->assertFalse($user->confirmed);
         $this->assertNotNull($user->confirmation_token);
 
-        $response = $this->get('/register/confirm?token=' . $user->confirmation_token);
+        // 用路由命名代替 url
+        $this->get(route('register.confirm',['token' => $user->confirmation_token]))
+        	 ->assertRedirect(route('threads'));
 
-        // 当新注册用户点击认证链接，用户变成已认证，且跳转到话题列表页面
         $this->assertTrue($user->fresh()->confirmed);
-        $response->assertRedirect('/threads');
     }
+
+    /* @test 测试无效 Token */
+    public function test_confirming_an_invalid_token()
+    {
+    	// 测试无效 Token
+    	$this->get(route('register.confirm'),['token' => 'invalid'])
+    		 ->assertRedirect(route('threads'))
+    		 ->assertSessionHas('flash','Unknown token.');
+    }
+
+
 }

@@ -14,39 +14,42 @@ class CreateThreadsTest extends TestCase
 	use DatabaseMigrations;
 
 	/* @test */
-	public function guests_may_not_create_threads()
+	public function test_guests_may_not_create_threads()
 	{
 		$this->withExceptionHandling();
 
         $this->get('/threads/create')
-             ->assertRedirect('/login');
+             ->assertRedirect(route('login'));
 
-        $this->post('/threads')
-             ->assertRedirect('/login');
+        $this->post(route('threads'))
+             ->assertRedirect(route('login'));
 	}
 
     /* @test 邮箱认证 */
-    public function test_authenticated_users_must_first_confirm_their_email_address_before_creating_threads()
+    public function test_new_users_must_first_confirm_their_email_address_before_creating_threads()
     {
-        $this->publishThread()
-            ->assertRedirect('/threads')
-            ->assertSessionHas('flash','You must first confirm your email address.');
+        // 调用 unconfirmed,生成未认证用户
+        $user = factory('App\User')->states('unconfirmed')->create();
+
+        $this->signIn($user);
+
+        $thread = make('App\Thread');
+
+        $this->post(route('threads'),$thread->toArray())
+             ->assertRedirect('/threads')
+             ->assertSessionHas('flash','You must first confirm your email address.');
     }
 
     /** @test */
-    public function an_authenticated_user_can_create_new_forum_threads()
+    public function test_a_user_can_create_new_forum_threads()
     {
         // Given we have a signed in user
         $this->signIn();  // 已登录用户
 
         // When we hit the endpoint to cteate a new thread
         $thread = make('App\Thread');
-        $response = $this->post('/threads',$thread->toArray());
-
-        // 打印出路径
-        //dd($thread->path());
-
-        // Then,when we visit the thread
+        $response = $this->post(route('threads'),$thread->toArray());
+        
         // We should see the new thread
         $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
@@ -54,7 +57,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /* @test*/
-    public function a_thread_requires_a_title()
+    public function test_a_thread_requires_a_title()
     {
 
         $this->publishThread(['title'=> null])
@@ -62,14 +65,14 @@ class CreateThreadsTest extends TestCase
     }
 
     /* @test */
-    public function a_thread_requires_a_body()
+    public function test_a_thread_requires_a_body()
     {
         $this->publishThread(['body' => null])
              ->assertSessionHasErrors('body');
     }
 
     /* @test */
-    public function a_thread_requires_a_valid_channel()
+    public function test_a_thread_requires_a_valid_channel()
     {
         // 新建两个 Channel,id 分别为 1 跟 2
         factory('App\Channel',2)->create();
@@ -77,8 +80,8 @@ class CreateThreadsTest extends TestCase
         $this->publishThread(['channel_id' => null])
              ->assertSessionHasErrors('channel_id');
 
-        // channel_id 为 2,是一个存在的 Channel
-        $this->publishThread(['channel_id' => 2])
+        // channle_id 为 999，是一个不存在的 Channel
+        $this->publishThread(['channel_id' => 999])
              ->assertSessionHasErrors('channel_id');
     }
 
@@ -89,7 +92,7 @@ class CreateThreadsTest extends TestCase
 
         $thread = create('App\Thread');
 
-        $this->delete($thread->path())->assertRedirect('/login');
+        $this->delete($thread->path())->assertRedirect(route('login'));
 
         $this->signIn();
         $this->delete($thread->path())->assertStatus(403);
@@ -119,7 +122,7 @@ class CreateThreadsTest extends TestCase
 
         $thread = make('App\Thread',$overrides);
 
-        return $this->post('/threads',$thread->toArray());
+        return $this->post(route('threads'),$thread->toArray());
     }
 
 
