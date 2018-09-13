@@ -27,6 +27,10 @@ Route::get('threads/{channel}','ThreadController@index');
 
 Route::get('/threads/{channel}/{thread}/replies','ReplyController@index');
 Route::post('/threads/{channel}/{thread}/replies','ReplyController@store');
+
+// 最佳回复
+Route::post('/replies/{reply}/best','BestRepliesController@store')->name('best-replies.store');
+
 Route::patch('/replies/{reply}','ReplyController@update');
 Route::delete('/replies/{reply}','ReplyController@destroy');
 
