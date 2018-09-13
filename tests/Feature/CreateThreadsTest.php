@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Activity;
+use App\Thread;
 
 class CreateThreadsTest extends TestCase
 {
@@ -83,6 +84,32 @@ class CreateThreadsTest extends TestCase
         // channle_id 为 999，是一个不存在的 Channel
         $this->publishThread(['channel_id' => 999])
              ->assertSessionHasErrors('channel_id');
+    }
+
+    /* @test 生成唯一的 Slug，相同话题的 Slug 加上递增的后缀，如：title，title-2，title-3等。 */
+    public function test_a_thread_requires_a_unique_slug()
+    {
+        $this->signIn();
+
+        create('App\Thread',[],2);
+
+        $thread = create('App\Thread',['title' => 'Foo Title']);
+
+        $thread = $this->postJson(route('threads'),$thread->toArray())->json();
+
+        $this->assertEquals("foo-title-{$thread['id']}",$thread['slug']);
+    }
+
+    /* @test 话题生成的 Slug 用 ID 作为后缀 */
+    public function test_a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
+    {
+        $this->signIn();
+
+        $thread = create('App\Thread',['title' => 'Something 24']);
+
+        $thread = $this->postJson(route('threads'),$thread->toArray())->json();
+
+        $this->assertEquals("something-24-{$thread['id']}",$thread['slug']);
     }
 
     /* @test 删除操作权限认证 */
