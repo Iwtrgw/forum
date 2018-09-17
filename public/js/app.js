@@ -59559,6 +59559,9 @@ module.exports = {
 		var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
 
 		return model[prop] == user.id;
+	},
+	isAdmin: function isAdmin() {
+		return ['NoNo1'].includes(user.name);
 	}
 };
 
@@ -60772,13 +60775,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['initialRepliesCount'],
+	props: ['initialRepliesCount', 'dataLocked'],
 
 	components: { Replies: __WEBPACK_IMPORTED_MODULE_0__components_Replies___default.a, SubscribeButton: __WEBPACK_IMPORTED_MODULE_1__components_SubscribeButton___default.a },
 
 	data: function data() {
 		return {
-			repliesCount: this.initialRepliesCount
+			repliesCount: this.dataRepliesCount,
+			locked: this.dataLocked
 		};
 	}
 });
@@ -60841,6 +60845,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__NewReply__ = __webpack_require__(195);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__NewReply___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__NewReply__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_Collection__ = __webpack_require__(200);
+//
+//
+//
+//
 //
 //
 //
@@ -63522,10 +63530,16 @@ var render = function() {
         on: { changed: _vm.fetch }
       }),
       _vm._v(" "),
-      _c("new-reply", {
-        attrs: { endpoint: _vm.endpoint },
-        on: { created: _vm.add }
-      })
+      _vm.$parent.locked
+        ? _c("p", [
+            _vm._v(
+              "\n\t\tThis thread is locked.No more replies are allowed.\n\t"
+            )
+          ])
+        : _c("new-reply", {
+            attrs: { endpoint: _vm.endpoint },
+            on: { created: _vm.add }
+          })
     ],
     2
   )
