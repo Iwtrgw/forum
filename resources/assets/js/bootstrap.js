@@ -53,14 +53,21 @@ if (token) {
 // });
 window.Vue = require('vue');
 
-window.events = new Vue();
+let authorizations = require('./authorizations');
 
-Vue.prototype.authorize = function (hander) {
+Vue.prototype.authorize = function (...params) {
+	if (!window.App.signIn) return false;
 
-	let user = window.App.user;
+	if (typeof params[0] === 'string') {
+		return authorizations[params[0]](params[1]);
+	}
 
-	return user ? hander(user) : false;
+	return params[0](window.App.user);
 };
+
+Vue.prototype.signIn = window.App.signIn;
+
+window.events = new Vue();
 
 window.flash = function (message,level = 'success') {
 	window.events.$emit('flash',{ message,level });

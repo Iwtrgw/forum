@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div v-if="signedIn">
+		<div v-if="signIn">
 			<div class="form-group">
 				<textarea class="form-control" name="body" id="body" rows="5" required placeholder="说点什么吧..." v-model="body"></textarea>
 			</div>
@@ -27,11 +27,7 @@
 			};
 		},
 
-		computed: {
-			signedIn(){
-				return window.App.signIn;
-			}
-		},
+		
 
 		mounted() {
 			$('#body').atwho({

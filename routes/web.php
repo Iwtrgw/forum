@@ -32,7 +32,8 @@ Route::post('/threads/{channel}/{thread}/replies','ReplyController@store');
 Route::post('/replies/{reply}/best','BestRepliesController@store')->name('best-replies.store');
 
 Route::patch('/replies/{reply}','ReplyController@update');
-Route::delete('/replies/{reply}','ReplyController@destroy');
+Route::delete('/replies/{reply}','ReplyController@destroy')->name('replies.destroy'); // 删除最佳回复
+
 
 Route::post('/replies/{reply}/favorites','FavoritesController@store');
 Route::delete('/replies/{reply}/favorites','FavoritesController@destroy'); // 取消点赞
