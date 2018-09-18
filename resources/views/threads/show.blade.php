@@ -6,7 +6,7 @@
 
 @section('content')
     {{-- 绑定 data-locked 属性 --}}
-    <thread-view :initial-replies-count="{{ $thread->replies_count }}" :data-locked="{{ $thread->locked }}" inline-template>
+    <thread-view :thread="{{ $thread }}" inline-template>
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
@@ -67,10 +67,10 @@
                             </p>
 
                             <p>
-                                <subscribe-button :active="{{ json_encode($thread->isSubscribedTo) }}"></subscribe-button>
+                                <subscribe-button :active="{{ json_encode($thread->isSubscribedTo) }}" v-if="signIn"></subscribe-button>
 
                                 {{-- 增加 Lock 按钮 --}}
-                                <button class="btn btn-default" v-if="authorize('isAdmin')" @click="locked=true">Lock</button>
+                                <button class="btn btn-default" v-if="authorize('isAdmin')" @click="toggleLock" v-text="locked ? 'Unlock' : 'Lock'"></button>
                             </p>
                         </div>
                     </div>

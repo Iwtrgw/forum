@@ -25,7 +25,9 @@ Route::delete('threads/{channel}/{thread}','ThreadController@destroy');
 Route::post('threads','ThreadController@store')->middleware('must-be-confirmed');
 Route::get('threads/{channel}','ThreadController@index');
 
-Route::post('locked-threads/{thread}','LockedThreadsController@store')->name('locked-threads.store')->middleware('admin');
+Route::post('locked-threads/{thread}','LockedThreadsController@store')->name('locked-threads.store')->middleware('admin'); // 锁定话题
+Route::delete('locked-threads/{thread}','LockedThreadsController@destroy')->name('locked-threads.destroy')->middleware('admin'); // 解锁话题
+
 
 Route::get('/threads/{channel}/{thread}/replies','ReplyController@index');
 Route::post('/threads/{channel}/{thread}/replies','ReplyController@store');

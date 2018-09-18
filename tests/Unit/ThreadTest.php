@@ -150,15 +150,5 @@ class ThreadTest extends TestCase
         });
     }
 
-    /* @test 锁定话题功能测试 */
-    public function test_a_thread_can_be_locked()
-    {
-        $this->assertFalse($this->thread->locked);
-
-        $this->thread->lock();
-
-        $this->assertTrue($this->thread->locked);
-    }
-
     
 }
