@@ -60770,6 +60770,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Replies___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Replies__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_SubscribeButton__ = __webpack_require__(202);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_SubscribeButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_SubscribeButton__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
@@ -60780,18 +60781,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	components: { Replies: __WEBPACK_IMPORTED_MODULE_0__components_Replies___default.a, SubscribeButton: __WEBPACK_IMPORTED_MODULE_1__components_SubscribeButton___default.a },
 
 	data: function data() {
-		return {
+		return _defineProperty({
 			repliesCount: this.thread.replies_count,
-			locked: this.thread.locked
-		};
+			locked: this.thread.locked,
+			editing: false,
+			title: this.thread.title,
+			body: this.thread.body,
+			form: {}
+		}, 'editing', false);
+	},
+	created: function created() {
+		this.resetForm();
 	},
 
 
 	methods: {
 		toggleLock: function toggleLock() {
-			axios[this.locked ? 'delete' : 'post']('/locked-threads/' + this.thread.slug);
+			var uri = '/locked-threads/' + this.thread.slug;
+
+			axios[this.locked ? 'delete' : 'post'](uri);
 
 			this.locked = !this.locked;
+		},
+		update: function update() {
+			var _this = this;
+
+			var uri = '/threads/' + this.thread.channel.slug + '/' + this.thread.slug;
+
+			axios.patch(uri, this.form).then(function () {
+				_this.editing = false;
+				_this.title = _this.form.title;
+				_this.body = _this.form.body;
+
+				flash('Your thread has been updated.');
+			});
+		},
+		resetForm: function resetForm() {
+			this.form.title = this.thread.title;
+			this.form.body = this.thread.body;
+
+			this.editing = false;
 		}
 	}
 });

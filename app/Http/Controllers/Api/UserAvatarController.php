@@ -10,9 +10,9 @@ class UserAvatarController extends Controller
 	// 上传头像
     public function store()
     {
-    	$this->validate(request(),[
-    		'avatar' => ['required','image']
-    	]);
+    	request()->validate([
+            'avatar' => ['required','image']
+        ]);
 
     	auth()->user()->update([
     		'avatar_path' => request()->file('avatar')->store('avatars','public')

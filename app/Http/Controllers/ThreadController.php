@@ -126,13 +126,24 @@ class ThreadController extends Controller
      */
     public function update($channelId,Thread $thread)
     {
-        if (request()->has('locked')) {
+        /*if (request()->has('locked')) {
             if (! auth()->user()->isAdmin()) {
                 return response('',403);
             }
 
             $thread->lock();
-        }
+        }*/
+
+        // 应用授权策略
+        $this->authorize('update',$thread);
+
+        // 验证规则
+        $thread->update(request()->validate([
+            'title' => 'required|spamfree',
+            'body' => 'required|spamfree',
+        ]));
+
+        return $thread;
     }
 
     /**
