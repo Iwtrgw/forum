@@ -75,7 +75,7 @@ class ThreadTest extends TestCase
     }
 
     /* @test */
-    function a_thread_belongs_to_a_channel()
+    function test_a_thread_belongs_to_a_channel()
     {
         $thread = create('App\Thread');
 

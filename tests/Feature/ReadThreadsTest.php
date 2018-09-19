@@ -37,7 +37,7 @@ class ReadThreadsTest extends TestCase
     }
 
     /* @test */
-    public function a_user_can_filter_threads_assording_to_a_channel()
+    public function test_a_user_can_filter_threads_assording_to_a_channel()
     {
         $channel = create('App\Channel');
         $threadInChannel = create('App\Thread',['channel_id' => $channel->id]);
@@ -49,7 +49,7 @@ class ReadThreadsTest extends TestCase
     }
 
     /* @test */
-    public function a_user_can_filter_threads_by_any_username()
+    public function test_a_user_can_filter_threads_by_any_username()
     {
         $this->signIn(create('App\User',['name' => 'NoNo1']));
 

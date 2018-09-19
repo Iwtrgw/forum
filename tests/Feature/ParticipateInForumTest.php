@@ -12,7 +12,7 @@ class ParticipateInForumTest extends TestCase
 	use DatabaseMigrations;
 
 	/** @test */
-    public function unauthenticated_user_may_no_add_replies()
+    public function test_unauthenticated_user_may_no_add_replies()
     {
         $this->withExceptionHandling()
 	         ->post('threads/some-channel/1/replies',[])
@@ -20,7 +20,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_may_participate_in_forum_threads()
+    function test_an_authenticated_user_may_participate_in_forum_threads()
     {
         // Given we have a authenticated user
 	    $this->signIn();
@@ -40,14 +40,14 @@ class ParticipateInForumTest extends TestCase
     }
 
     /* @test */
-    public function a_reply_reqiures_a_body()
+    public function test_a_reply_reqiures_a_body()
     {
     	$this->withExceptionHandling()->signIn();
 
     	$thread = create('App\Thread');
     	$reply = make('App\Reply',['body' => null]);
 
-    	$this->post($thread->path() . 'replies',$reply->toArray())
+    	$this->post($thread->path() . '/replies',$reply->toArray())
     		 ->assertSessionHasErrors('body');
     }
 
