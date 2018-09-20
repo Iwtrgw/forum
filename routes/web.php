@@ -21,6 +21,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('threads','ThreadController@index')->name('threads');
 Route::get('threads/create','ThreadController@create');
 Route::get('threads/{channel}/{thread}','ThreadController@show');
+
+Route::get('threads/search','SearchController@show');
 // 话题更新
 Route::patch('threads/{channel}/{thread}','ThreadController@update');
 Route::delete('threads/{channel}/{thread}','ThreadController@destroy');
