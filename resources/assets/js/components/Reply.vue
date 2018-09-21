@@ -17,7 +17,7 @@
 			<div v-if="editing">
 				<form @submit.prevent="update">
 					<div class="form-group">
-						<textarea v-model="body" class="form-control" required></textarea>
+						<wysiwyg v-model="body"></wysiwyg>
 					</div>
 
 					<button class="btn btn-xs btn-primary">Update</button>
@@ -73,16 +73,16 @@
 
 		methods:{
 			update() {
-				axios.patch('/replies/' + this.reply.id,{
+				axios.patch('/replies/' + this.id,{
 					body:this.body
 				})
 				.catch(error => {
 					flash(error.response.data,'danger');
 				});
 
-			this.editing = false;
+				this.editing = false;
 
-			flash('Updated!');
+				flash('Updated!');
 			},
 
 			destroy() {
