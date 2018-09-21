@@ -14,12 +14,12 @@
         props:['name','value','placeholder','shouldClear'],
 
         mounted () {
-            this.$refs.trix.addEventListener('trix-change', e => {
+           this.$refs.trix.addEventListener('trix-change', e => {
                 this.$emit('input', e.target.innerHTML);
             });
 
-            this.$watch('shouldClear',() => {
-            	this.$refs.trix.value = '';
+            this.$watch('shouldClear', () => {
+               this.$refs.trix.value = '';
             });
         }
     }
