@@ -150,5 +150,14 @@ class ThreadTest extends TestCase
         });
     }
 
+
+    /* @test 防止 XSS 安全漏洞*/
+    public function test_a_thread_body_is_sanitized_automatically()
+    {
+        $thread = create('App\Thread',['body' => "<script>alert('bad')</script><p>This is OK.</p>"]);
+
+        $this->assertEquals("<p>This is OK.</p>",$thread->body);
+    }
+
     
 }

@@ -28,6 +28,7 @@ class Thread extends Model
         static::created(function($thread) {
           $thread->update([
             'slug' => $thread->title,
+            'body' => clean($thread->body,'thread_or_reply_body'),
           ]);
         });
     }
